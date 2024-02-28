@@ -1,85 +1,107 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
-<template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+<template class="main">
+  <div id="app">
+    <h1>Список задач</h1>
+    <input v-model="newTask" @keyup.enter="addTask" placeholder="Добавить задачу" />
+    <ul>
+      <transition-group name="slide-fade">
+      <li v-for="(task, index) in tasks" :key="index">
+        {{ task }}
+        <button @click="removeTask(index)">Удалить</button>
+      </li>
+    </transition-group>
+    </ul>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<script>
+export default {
+  data() {
+    return {
+      newTask: '',
+      tasks: []
+    };
+  },
+  methods: {
+    addTask() {
+      if (this.newTask.trim() !== '') {
+        this.tasks.push(this.newTask);
+        this.newTask = '';
+      }
+    },
+    removeTask(index) {
+      this.tasks.splice(index, 1);
+    }
+  }
+};
+
+</script>
+
+<style>
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active до версии 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+
+body{
+  background-color: #242424;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 50;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #ee59f3;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
-  margin-top: 2rem;
+  color: #ee6adc;
+ 
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+input {
+  margin-bottom: 10px;
+  padding: 20px;
+  height: 25px;
+  border-radius: 10px;
+  background-color: #1a1a1a;
+  font-size: 20px;
+  transition: border-color 0.25s;
+  text-decoration: #ee59f3;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+input:hover {
+  border-color: #ee59f3;
+}
+ul {
+  list-style-type: none;
+  padding: 10px;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+li {
+  margin-bottom: 10px;
+  font-size: 20px;
 }
 
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+button {
+  margin-left: 10px;
+  cursor: pointer;
 }
 </style>
